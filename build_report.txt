@@ -1,0 +1,21 @@
+2001: found=49 answers=58 kept=34
+2002: found=51 answers=57 kept=38
+2003: found=49 answers=55 kept=30
+2004: found=53 answers=53 kept=37
+2005: found=53 answers=58 kept=30
+2006: found=60 answers=60 kept=60
+2007: found=60 answers=60 kept=60
+2008: found=60 answers=60 kept=58
+2009: found=60 answers=60 kept=57
+2010: found=60 answers=60 kept=58
+2011: found=60 answers=59 kept=57
+2012: found=60 answers=60 kept=54
+2013: found=60 answers=60 kept=56
+2014: found=60 answers=60 kept=55
+2015: found=60 answers=60 kept=57
+2016: found=60 answers=0 kept=0
+2017: found=60 answers=60 kept=60
+
+TOTAL: 801 questions (all with verified answers)
+with explanation: 223
+by category: TARIH=286, ATATURK=200, COGRAFYA=173, VATANDASLIK=114, GUNCEL=28

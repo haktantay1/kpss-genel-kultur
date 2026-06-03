@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a365d">
+<title>KPSS Genel Kültür — Akıllı Çalışma Sistemi</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KPSS GK">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,500;0,700;1,400&family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#1a365d; --primary-2:#2a4a7f; --accent:#e53e3e; --gold:#d69e2e;
+  --cat-TARIH:#DD6B20; --cat-ATATURK:#D53F8C; --cat-COGRAFYA:#38A169;
+  --cat-VATANDASLIK:#3182CE; --cat-GUNCEL:#805AD5;
+  --bg:#eef2f7; --surface:#fff; --surface-2:#f7fafc; --text:#1a202c; --muted:#718096;
+  --border:#e2e8f0; --success:#2f855a; --error:#e53e3e; --warning:#d69e2e;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.10); --shadow-md:0 4px 14px rgba(0,0,0,.10);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.16); --radius:16px;
+}
+[data-theme="dark"]{
+  --primary:#4a78c0; --primary-2:#3a5e9e; --bg:#0f1623; --surface:#1a2233;
+  --surface-2:#222c40; --text:#e8edf5; --muted:#94a3b8; --border:#2d3a52;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.4); --shadow-md:0 4px 14px rgba(0,0,0,.4);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Noto Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:16px;line-height:1.6;color:var(--text);background:var(--bg);
+  transition:background .3s,color .3s}
+h1,h2,h3{font-family:'Noto Serif',Georgia,serif;font-weight:700;line-height:1.25}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::selection{background:var(--gold);color:#fff}
+.screen{max-width:720px;margin:0 auto;min-height:100vh;min-height:100dvh;
+  padding:calc(18px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
+  display:flex;flex-direction:column;gap:16px;animation:slideIn .32s ease}
+/* install banner */
+.install-banner{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);
+  border-left:5px solid var(--gold);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow-sm)}
+.install-banner .ib-txt{flex:1;font-size:13.5px;font-weight:600}
+.install-banner .ib-txt small{display:block;color:var(--muted);font-weight:500;font-size:11.5px;margin-top:1px}
+.install-banner button{background:var(--primary);color:#fff;border-radius:10px;padding:9px 14px;font-weight:700;font-size:13px;white-space:nowrap}
+.install-banner .ib-x{background:none;color:var(--muted);padding:4px 8px;font-size:18px}
+@keyframes slideIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.96)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+
+/* header */
+.app-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo .flag{font-size:34px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.15))}
+.logo h1{font-size:20px;color:var(--primary)}
+.logo p{font-size:12.5px;color:var(--muted);font-weight:500}
+.icon-btn{width:42px;height:42px;border-radius:12px;background:var(--surface);
+  box-shadow:var(--shadow-sm);font-size:19px;display:grid;place-items:center;transition:.18s}
+.icon-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+
+/* banners & cards */
+.streak-banner{background:linear-gradient(135deg,#dd6b20,#e53e3e);color:#fff;
+  padding:13px 16px;border-radius:14px;font-weight:600;font-size:14.5px;box-shadow:var(--shadow-md)}
+.summary-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.summary-card{background:var(--surface);border-radius:14px;padding:16px 10px;text-align:center;
+  box-shadow:var(--shadow-sm);border:1px solid var(--border)}
+.summary-card .num{font-size:26px;font-weight:800;color:var(--primary);font-family:'Noto Serif',serif}
+.summary-card .lbl{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;letter-spacing:.02em}
+
+.queue-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.queue-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:14px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-sm)}
+.queue-item .ic{font-size:24px}
+.queue-item .qt{font-size:12.5px;color:var(--muted);font-weight:600}
+.queue-item .qc{font-size:18px;font-weight:800;color:var(--text)}
+
+.primary-btn{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;
+  border-radius:14px;padding:17px 22px;font-size:17px;font-weight:700;width:100%;
+  box-shadow:0 6px 18px rgba(26,54,93,.32);transition:.18s;display:flex;align-items:center;
+  justify-content:center;gap:8px}
+.primary-btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(26,54,93,.42)}
+.primary-btn:active{transform:translateY(0)}
+.primary-btn.gold{background:linear-gradient(135deg,#d69e2e,#dd6b20);box-shadow:0 6px 18px rgba(214,158,46,.35)}
+.primary-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.section-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.05em;margin:4px 2px -4px}
+
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.cat-card{background:var(--surface);border:1px solid var(--border);border-left:5px solid var(--c);
+  border-radius:13px;padding:13px 14px;display:flex;flex-direction:column;gap:3px;
+  box-shadow:var(--shadow-sm);transition:.18s;text-align:left}
+.cat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.cat-card .cn{font-weight:700;font-size:15px;display:flex;align-items:center;gap:7px}
+.cat-card .cs{font-size:12px;color:var(--muted);font-weight:600}
+.cat-card .cbar{height:5px;border-radius:3px;background:var(--border);margin-top:7px;overflow:hidden}
+.cat-card .cbar i{display:block;height:100%;background:var(--c);border-radius:3px}
+
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode-btn{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:14px 12px;
+  font-weight:600;font-size:14.5px;display:flex;align-items:center;gap:9px;box-shadow:var(--shadow-sm);transition:.18s}
+.mode-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--primary)}
+.mode-btn .me{font-size:20px}
+
+/* study */
+.progress-top{display:flex;flex-direction:column;gap:10px}
+.progress-track{height:7px;background:var(--border);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));
+  border-radius:4px;transition:width .35s ease}
+.study-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.cat-badge{font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:20px}
+.pill{font-size:12.5px;font-weight:700;color:var(--muted);background:var(--surface-2);
+  padding:5px 11px;border-radius:20px;border:1px solid var(--border)}
+.q-card{background:var(--surface);border-radius:var(--radius);padding:22px 20px;
+  box-shadow:var(--shadow-md);border-left:5px solid var(--primary)}
+.q-text{font-size:17px;line-height:1.7;font-weight:500;white-space:pre-wrap}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{width:100%;display:flex;align-items:flex-start;gap:13px;padding:15px 16px;background:var(--surface);
+  border:2px solid var(--border);border-radius:13px;text-align:left;font-size:15.5px;line-height:1.5;
+  transition:.16s;min-height:54px}
+.opt:hover:not(:disabled){border-color:var(--primary);background:var(--surface-2);transform:translateX(4px)}
+.opt:disabled{cursor:default}
+.opt .lt{width:30px;height:30px;border-radius:50%;background:var(--primary);color:#fff;display:grid;
+  place-items:center;font-weight:700;font-size:14px;flex-shrink:0;transition:.16s}
+.opt.correct{border-color:var(--success);background:rgba(47,133,90,.12);animation:pop .3s ease}
+.opt.correct .lt{background:var(--success)}
+.opt.wrong{border-color:var(--error);background:rgba(229,62,62,.10)}
+.opt.wrong .lt{background:var(--error)}
+.opt .mk{margin-left:auto;font-weight:800;font-size:18px}
+.study-actions{display:flex;gap:10px}
+.ghost-btn{flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;
+  padding:13px;font-weight:600;color:var(--muted);transition:.16s}
+.ghost-btn:hover{border-color:var(--primary);color:var(--text)}
+
+/* answer */
+.result-banner{display:flex;align-items:center;gap:12px;padding:15px 18px;border-radius:14px;
+  font-weight:800;font-size:18px;color:#fff}
+.result-banner.ok{background:linear-gradient(135deg,#2f855a,#38a169)}
+.result-banner.no{background:linear-gradient(135deg,#c53030,#e53e3e);animation:shake .4s}
+.result-banner .ri{font-size:26px}
+.expl-card{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
+.expl-card .et{font-weight:700;color:var(--primary);margin-bottom:7px;font-size:14.5px}
+.expl-card .ex{font-size:15px;line-height:1.65}
+.expl-card .tag{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;color:var(--muted);
+  background:var(--surface);border:1px solid var(--border);padding:4px 10px;border-radius:20px}
+.rating{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow-sm)}
+.rating .rt{text-align:center;font-weight:600;font-size:14px;margin-bottom:10px;color:var(--muted)}
+.rating-row{display:flex;gap:7px}
+.rate-btn{flex:1;padding:10px 3px;border-radius:11px;border:2px solid var(--border);background:var(--surface-2);
+  text-align:center;font-size:11px;font-weight:600;transition:.16s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.rate-btn .em{font-size:23px}
+.rate-btn:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:var(--shadow-md)}
+
+/* stats */
+.screen-head{display:flex;align-items:center;gap:12px}
+.back-btn{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:9px 14px;
+  font-weight:600;box-shadow:var(--shadow-sm)}
+.screen-head h2{font-size:20px;color:var(--primary)}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;
+  text-align:center;box-shadow:var(--shadow-sm)}
+.stat-box .v{font-size:25px;font-weight:800;color:var(--primary);font-family:'Noto Serif',serif}
+.stat-box .l{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow-sm)}
+.panel h3{font-size:15.5px;margin-bottom:13px}
+.bar-item{margin-bottom:12px}
+.bar-lbl{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;margin-bottom:5px}
+.bar-track{height:11px;background:var(--border);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .5s ease}
+.bar-sub{font-size:11.5px;color:var(--muted);margin-top:3px}
+.weak-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px dashed var(--border);font-size:14px}
+.weak-item:last-child{border:0}
+.weak-item .pct{font-weight:700;color:var(--error)}
+.yeargrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px}
+.ychip{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:9px 6px;text-align:center}
+.ychip .yy{font-size:12px;color:var(--muted);font-weight:600}
+.ychip .yp{font-size:15px;font-weight:800}
+
+/* settings */
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--border)}
+.set-row:last-child{border:0}
+.set-row .sl{font-weight:600;font-size:14.5px}
+.set-row .sd{font-size:12px;color:var(--muted)}
+.toggle{width:52px;height:30px;border-radius:16px;background:var(--border);position:relative;transition:.2s;flex-shrink:0}
+.toggle.on{background:var(--success)}
+.toggle i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.toggle.on i{left:25px}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:34px;height:34px;border-radius:9px;background:var(--surface-2);border:1px solid var(--border);font-size:18px;font-weight:700}
+.stepper .val{font-weight:800;min-width:34px;text-align:center;font-size:16px}
+.danger-btn{background:rgba(229,62,62,.12);color:var(--error);border:1.5px solid var(--error);
+  border-radius:12px;padding:13px;font-weight:700;width:100%}
+
+/* exam */
+.exam-bar{position:sticky;top:env(safe-area-inset-top);z-index:5;background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;
+  gap:10px;box-shadow:var(--shadow-sm);flex-wrap:wrap}
+.exam-bar .tm{font-weight:800;font-size:18px;font-family:'Noto Serif',serif}
+.exam-bar .tm.warn{color:var(--error)}
+.exam-nav{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px}
+.qn{aspect-ratio:1;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);
+  font-weight:700;font-size:13px;display:grid;place-items:center;transition:.12s}
+.qn.answered{background:var(--primary);color:#fff;border-color:var(--primary)}
+.qn.marked{border-color:var(--gold);border-width:2.5px}
+.qn.current{outline:3px solid var(--accent);outline-offset:1px}
+.exam-foot{display:flex;gap:10px}
+.exam-foot button{flex:1;border-radius:12px;padding:13px;font-weight:700;border:1.5px solid var(--border);background:var(--surface)}
+.exam-foot .next{background:var(--primary);color:#fff;border-color:var(--primary)}
+.empty{text-align:center;color:var(--muted);padding:40px 20px}
+.empty .be{font-size:48px;margin-bottom:10px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);
+  padding:12px 20px;border-radius:30px;font-weight:600;font-size:14px;box-shadow:var(--shadow-lg);z-index:50;
+  animation:slideIn .3s}
+.fineprint{font-size:11.5px;color:var(--muted);text-align:center;line-height:1.5;margin-top:6px}
+@media(max-width:480px){
+  .screen{padding:14px 12px 36px}
+  .q-text{font-size:16px}.opt{padding:13px;font-size:15px}
+  .rate-btn{font-size:9.5px;padding:8px 2px}.rate-btn .em{font-size:20px}
+  .mode-grid{grid-template-columns:1fr 1fr}
+  .summary-card .num{font-size:23px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="questions.js"></script>
+<script>
+"use strict";
+/* ============ CONFIG ============ */
+const CATEGORIES={
+  TARIH:{name:"Tarih",icon:"🏛️",color:"#DD6B20"},
+  ATATURK:{name:"İnkılap Tarihi",icon:"🇹🇷",color:"#D53F8C"},
+  COGRAFYA:{name:"Coğrafya",icon:"🌍",color:"#38A169"},
+  VATANDASLIK:{name:"Vatandaşlık",icon:"⚖️",color:"#3182CE"},
+  GUNCEL:{name:"Kültür & Güncel",icon:"🎭",color:"#805AD5"}
+};
+const CATKEYS=Object.keys(CATEGORIES);
+const LETTERS=["A","B","C","D","E"];
+const DAY=86400000;
+
+/* ============ STATE ============ */
+const State={
+  questions:[], byId:{}, progress:{}, stats:{}, settings:{},
+  view:"home", params:{},
+  session:null, idx:0, selected:null,
+  exam:null, qStart:0, timerId:null
+};
+
+/* ============ STORAGE ============ */
+function load(){
+  try{State.progress=JSON.parse(localStorage.getItem("kpss_progress"))||{}}catch(e){State.progress={}}
+  try{State.stats=JSON.parse(localStorage.getItem("kpss_stats"))||{}}catch(e){State.stats={}}
+  try{State.settings=JSON.parse(localStorage.getItem("kpss_settings"))||{}}catch(e){State.settings={}}
+  State.settings=Object.assign({dailyGoal:30,sessionLength:20,sound:true,theme:"light",cats:[]},State.settings);
+  State.stats=Object.assign({totalAnswered:0,correctTotal:0,streakDays:0,lastStudyDate:null,studyMin:0},State.stats);
+  document.documentElement.setAttribute("data-theme",State.settings.theme);
+}
+function saveProgress(){localStorage.setItem("kpss_progress",JSON.stringify(State.progress))}
+function saveStats(){localStorage.setItem("kpss_stats",JSON.stringify(State.stats))}
+function saveSettings(){localStorage.setItem("kpss_settings",JSON.stringify(State.settings))}
+
+/* ============ SM-2 ============ */
+function sm2(qid,quality){
+  const d=State.progress[qid]||{};
+  let rep=d.sm2?d.sm2.repetitions:0, ef=d.sm2?d.sm2.easeFactor:2.5, iv=d.sm2?d.sm2.interval:0;
+  if(quality>=3){
+    if(rep===0)iv=1; else if(rep===1)iv=6; else iv=Math.round(iv*ef);
+    rep++;
+  }else{rep=0;iv=1}
+  ef=Math.max(1.3, ef+0.1-(5-quality)*(0.08+(5-quality)*0.02));
+  const next=new Date(Date.now()+iv*DAY).toISOString();
+  return {repetitions:rep,easeFactor:Math.round(ef*100)/100,interval:iv,nextReview:next};
+}
+function dueQuestions(pool){
+  const now=Date.now();
+  return pool.filter(q=>{const p=State.progress[q.id];if(!p||!p.nextReview)return false;return new Date(p.nextReview).getTime()<=now});
+}
+function newQuestions(pool){return pool.filter(q=>!State.progress[q.id])}
+
+/* ============ SESSION PLANNER ============ */
+function interleave(qs){ // round-robin by category so same topic isn't consecutive
+  const g={};qs.forEach(q=>{(g[q.category]=g[q.category]||[]).push(q)});
+  Object.values(g).forEach(a=>a.sort(()=>Math.random()-.5));
+  const out=[],keys=Object.keys(g);let more=true;
+  while(more){more=false;for(const k of keys){if(g[k].length){out.push(g[k].shift());more=true}}}
+  return out;
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function buildSession(opts){
+  opts=opts||{};
+  let pool=State.questions.slice();
+  if(opts.category)pool=pool.filter(q=>q.category===opts.category);
+  if(opts.year)pool=pool.filter(q=>q.year===opts.year);
+  if(State.settings.cats.length && !opts.category && !opts.year && opts.mode!=="exam")
+    pool=pool.filter(q=>State.settings.cats.includes(q.category));
+  const n=opts.count||State.settings.sessionLength||20;
+  let sess=[];
+  const mode=opts.mode||"mixed";
+  if(mode==="review")sess=shuffle(dueQuestions(pool));
+  else if(mode==="new")sess=newQuestions(pool).slice(0,n*3);
+  else if(mode==="weak")sess=shuffle(pool.filter(q=>{const p=State.progress[q.id];return p&&p.attempts>=2&&(p.correct/p.attempts)<0.6}));
+  else if(mode==="year")sess=shuffle(pool);
+  else if(mode==="category")sess=shuffle(pool);
+  else{ // mixed: ~70% due + 30% new, interleaved
+    const due=shuffle(dueQuestions(pool)).slice(0,Math.floor(n*0.7));
+    const fresh=shuffle(newQuestions(pool)).slice(0,n-due.length);
+    sess=interleave(shuffle(due.concat(fresh)));
+  }
+  if(mode!=="mixed")sess=interleave(sess);
+  return sess.slice(0,n);
+}
+
+/* ============ RECORD PROGRESS ============ */
+function record(qid,isCorrect,rating){
+  const p=State.progress[qid]||{seen:true,attempts:0,correct:0,history:[]};
+  p.attempts++; if(isCorrect)p.correct++; p.seen=true; p.lastAttempt=new Date().toISOString();
+  let quality=rating; if(isCorrect&&quality<3)quality=3; if(!isCorrect&&quality>2)quality=2;
+  const s=sm2(qid,quality); p.sm2=s; p.nextReview=s.nextReview;
+  p.history=(p.history||[]); p.history.push({d:Date.now(),c:isCorrect,r:rating});
+  if(p.history.length>20)p.history=p.history.slice(-20);
+  State.progress[qid]=p;
+  State.stats.totalAnswered++; if(isCorrect)State.stats.correctTotal++;
+  updateStreak(); saveProgress(); saveStats();
+}
+function updateStreak(){
+  const today=new Date().toDateString();
+  const yest=new Date(Date.now()-DAY).toDateString();
+  if(State.stats.lastStudyDate===today)return;
+  if(State.stats.lastStudyDate===yest)State.stats.streakDays=(State.stats.streakDays||0)+1;
+  else State.stats.streakDays=1;
+  State.stats.lastStudyDate=today;
+}
+function todayCount(){
+  const t=new Date().toDateString();let c=0;
+  for(const id in State.progress){const h=State.progress[id].history||[];
+    for(const e of h)if(new Date(e.d).toDateString()===t)c++}
+  return c;
+}
+function accuracy(){return State.stats.totalAnswered?Math.round(State.stats.correctTotal/State.stats.totalAnswered*100):0}
+function catStats(){
+  const r={};CATKEYS.forEach(c=>r[c]={attempts:0,correct:0,total:0});
+  State.questions.forEach(q=>{if(r[q.category])r[q.category].total++});
+  for(const id in State.progress){const q=State.byId[id];if(!q||!r[q.category])continue;
+    r[q.category].attempts+=State.progress[id].attempts;r[q.category].correct+=State.progress[id].correct}
+  return r;
+}
+
+/* ============ HELPERS ============ */
+function esc(s){return (s==null?"":String(s)).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function navigate(v,p){clearInterval(State.timerId);State.timerId=null;State.view=v;State.params=p||{};render();window.scrollTo(0,0)}
+function toast(msg){const t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),1900)}
+function years(){return [...new Set(State.questions.map(q=>q.year))].sort()}
+
+/* ============ AUDIO ============ */
+const Audio2={ctx:null,
+  tone(f,v,d,delay){if(!State.settings.sound)return;
+    try{if(!this.ctx)this.ctx=new (window.AudioContext||window.webkitAudioContext)();
+      const t=this.ctx.currentTime+(delay||0),o=this.ctx.createOscillator(),g=this.ctx.createGain();
+      o.connect(g);g.connect(this.ctx.destination);o.frequency.value=f;o.type="sine";
+      g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.start(t);o.stop(t+d)}catch(e){}},
+  ok(){this.tone(523.25,.14,.12,0);this.tone(659.25,.14,.12,.1);this.tone(784,.16,.18,.2)},
+  no(){this.tone(220,.16,.18,0);this.tone(180,.16,.22,.14)}
+};
+
+/* ============ RENDER ROUTER ============ */
+function render(){
+  const app=document.getElementById("app");
+  const v=State.view;
+  app.innerHTML=({home:renderHome,study:renderStudy,answer:renderAnswer,results:renderResults,
+    stats:renderStats,settings:renderSettings,exam:renderExam,examResults:renderExamResults,pick:renderPicker}[v]||renderHome)();
+  if(v==="study")startTimer();
+  if(v==="exam")startExamTimer();
+}
+
+/* ---- HOME ---- */
+function renderHome(){
+  const due=dueQuestions(State.questions).length, fresh=newQuestions(State.questions).length;
+  const tc=todayCount(),goal=State.settings.dailyGoal;
+  const cs=catStats();
+  const start=Math.min((due||0)+10,State.settings.sessionLength);
+  return `<div class="screen">
+    <header class="app-header">
+      <div class="logo"><span class="flag">🇹🇷</span><div><h1>KPSS Genel Kültür</h1><p>Akıllı Çalışma Sistemi</p></div></div>
+      <button class="icon-btn" onclick="navigate('settings')" title="Ayarlar">⚙️</button>
+    </header>
+    ${installBanner()}
+    ${State.stats.streakDays>0?`<div class="streak-banner">🔥 ${State.stats.streakDays} günlük seri! ${tc>=goal?"Bugünkü hedefini tamamladın 🎉":`Bugün ${tc}/${goal} soru çözdün.`}</div>`:""}
+    <div class="summary-row">
+      <div class="summary-card"><div class="num">${tc}</div><div class="lbl">BUGÜN</div></div>
+      <div class="summary-card"><div class="num">${State.stats.totalAnswered}</div><div class="lbl">TOPLAM</div></div>
+      <div class="summary-card"><div class="num">${accuracy()}%</div><div class="lbl">BAŞARI</div></div>
+    </div>
+    <div class="queue-row">
+      <div class="queue-item"><span class="ic">📅</span><div><div class="qt">Tekrar zamanı</div><div class="qc">${due} soru</div></div></div>
+      <div class="queue-item"><span class="ic">🆕</span><div><div class="qt">Yeni soru</div><div class="qc">${fresh} soru</div></div></div>
+    </div>
+    <button class="primary-btn gold" onclick="startSession({mode:'mixed'})">🚀 Çalışmaya Başla${start?` · ${start} soru`:""}</button>
+    <div class="section-title">Çalışma Modu</div>
+    <div class="mode-grid">
+      <button class="mode-btn" onclick="startSession({mode:'new'})"><span class="me">🆕</span> Yeni Sorular</button>
+      <button class="mode-btn" onclick="startSession({mode:'review'})"><span class="me">📅</span> Tekrar (${due})</button>
+      <button class="mode-btn" onclick="startSession({mode:'weak'})"><span class="me">⭐</span> Zayıf Konular</button>
+      <button class="mode-btn" onclick="navigate('pick')"><span class="me">📆</span> Yıla Göre</button>
+      <button class="mode-btn" onclick="startExam()"><span class="me">🎯</span> Sınav Simülasyonu</button>
+      <button class="mode-btn" onclick="navigate('stats')"><span class="me">📊</span> İstatistikler</button>
+    </div>
+    <div class="section-title">Kategoriler</div>
+    <div class="cat-grid">
+      ${CATKEYS.map(c=>{const i=CATEGORIES[c],st=cs[c],pct=st.attempts?Math.round(st.correct/st.attempts*100):0;
+        return `<button class="cat-card" style="--c:${i.color}" onclick="startSession({mode:'category',category:'${c}'})">
+          <span class="cn">${i.icon} ${i.name}</span><span class="cs">${st.total} soru · %${pct} başarı</span>
+          <span class="cbar"><i style="width:${pct}%"></i></span></button>`}).join("")}
+    </div>
+    <p class="fineprint">${State.questions.length} gerçek çıkmış soru · 2001–2017 · Resmî ÖSYM cevap anahtarları</p>
+  </div>`;
+}
+
+/* ---- PICKER (year) ---- */
+function renderPicker(){
+  const ys=years();
+  const counts={};State.questions.forEach(q=>counts[q.year]=(counts[q.year]||0)+1);
+  return `<div class="screen">
+    <div class="screen-head"><button class="back-btn" onclick="navigate('home')">← Geri</button><h2>📆 Yıla Göre</h2></div>
+    <div class="cat-grid">
+      ${ys.map(y=>`<button class="cat-card" style="--c:var(--primary)" onclick="startSession({mode:'year',year:${y}})">
+        <span class="cn">📅 ${y}</span><span class="cs">${counts[y]} soru</span></button>`).join("")}
+    </div></div>`;
+}
+
+/* ---- STUDY ---- */
+function startSession(opts){
+  const s=buildSession(opts);
+  if(!s.length){toast("Bu seçimde uygun soru bulunamadı 🙂");return}
+  State.session=s;State.idx=0;State.selected=null;
+  State.sessionInfo={mode:opts.mode,startTime:Date.now(),correct:0,wrong:0};
+  navigate("study");
+}
+function renderStudy(){
+  const q=State.session[State.idx];
+  if(!q){navigate("results");return""}
+  const prog=State.idx/State.session.length, ci=CATEGORIES[q.category];
+  return `<div class="screen">
+    <div class="progress-top">
+      <div class="progress-track"><div class="progress-fill" style="width:${prog*100}%"></div></div>
+      <div class="study-meta">
+        <span class="cat-badge" style="background:${ci.color}22;color:${ci.color}">${ci.icon} ${ci.name}</span>
+        <span class="pill">📅 ${q.year}</span>
+        <span class="pill" id="qtimer">⏱️ 0sn</span>
+        <span class="pill">${State.idx+1}/${State.session.length}</span>
+      </div>
+    </div>
+    <div class="q-card"><div class="q-text">${esc(q.questionText)}</div></div>
+    <div class="options">
+      ${LETTERS.filter(L=>q.options[L]).map(L=>`<button class="opt" onclick="selectAnswer('${L}')">
+        <span class="lt">${L}</span><span>${esc(q.options[L])}</span></button>`).join("")}
+    </div>
+    <div class="study-actions">
+      <button class="ghost-btn" onclick="selectAnswer(null)">Bilmiyorum ↷</button>
+      <button class="ghost-btn" onclick="quitSession()">Bitir</button>
+    </div>
+  </div>`;
+}
+function selectAnswer(L){clearInterval(State.timerId);State.selected=L;
+  const q=State.session[State.idx];const ok=L===q.correctAnswer;
+  if(ok)Audio2.ok();else Audio2.no();navigate("answer")}
+
+/* ---- ANSWER ---- */
+function renderAnswer(){
+  const q=State.session[State.idx];const sel=State.selected;const ok=sel===q.correctAnswer;
+  return `<div class="screen">
+    <div class="result-banner ${ok?"ok":"no"}"><span class="ri">${ok?"✅":"❌"}</span>
+      <span>${ok?"Doğru!":(sel?`Yanlış — Doğrusu: ${q.correctAnswer}`:`Doğru cevap: ${q.correctAnswer}`)}</span></div>
+    <div class="options">
+      ${LETTERS.filter(L=>q.options[L]).map(L=>{
+        const cor=L===q.correctAnswer,wr=L===sel&&!cor;
+        return `<div class="opt ${cor?"correct":""} ${wr?"wrong":""}">
+          <span class="lt">${L}</span><span>${esc(q.options[L])}</span>
+          ${cor?'<span class="mk" style="color:var(--success)">✓</span>':wr?'<span class="mk" style="color:var(--error)">✗</span>':""}</div>`}).join("")}
+    </div>
+    ${q.explanation?`<div class="expl-card"><div class="et">📖 Açıklama</div><div class="ex">${esc(q.explanation)}</div>
+      <span class="tag">🔗 ${CATEGORIES[q.category].name} · ${q.year} KPSS</span></div>`:
+      `<div class="expl-card"><div class="ex" style="color:var(--muted)">Bu soru ${q.year} KPSS Genel Kültür testinden. Doğru cevap <b>${q.correctAnswer}</b> şıkkıdır.</div></div>`}
+    <div class="rating">
+      <div class="rt">Bu soruyu ne kadar iyi biliyordun?</div>
+      <div class="rating-row">
+        <button class="rate-btn" onclick="rateNext(1)"><span class="em">😰</span>Hiç</button>
+        <button class="rate-btn" onclick="rateNext(2)"><span class="em">😕</span>Zor</button>
+        <button class="rate-btn" onclick="rateNext(3)"><span class="em">🙂</span>Orta</button>
+        <button class="rate-btn" onclick="rateNext(4)"><span class="em">😊</span>İyi</button>
+        <button class="rate-btn" onclick="rateNext(5)"><span class="em">😎</span>Çok İyi</button>
+      </div>
+    </div>
+  </div>`;
+}
+function rateNext(rating){
+  const q=State.session[State.idx];const ok=State.selected===q.correctAnswer;
+  record(q.id,ok,rating);
+  if(ok)State.sessionInfo.correct++;else State.sessionInfo.wrong++;
+  State.idx++;State.selected=null;
+  if(State.idx>=State.session.length)navigate("results");else navigate("study");
+}
+function quitSession(){if(State.idx===0){navigate("home");return}navigate("results")}
+
+/* ---- RESULTS ---- */
+function renderResults(){
+  const info=State.sessionInfo||{correct:0,wrong:0,startTime:Date.now()};
+  const done=info.correct+info.wrong;const pct=done?Math.round(info.correct/done*100):0;
+  const mins=Math.max(1,Math.round((Date.now()-info.startTime)/60000));
+  State.stats.studyMin=(State.stats.studyMin||0)+ (done?mins:0); saveStats();
+  const msg=pct>=80?"Mükemmel! 🌟":pct>=60?"Güzel gidiyor! 👏":done?"Tekrar çalışmaya devam 💪":"Hadi başlayalım!";
+  return `<div class="screen">
+    <header class="app-header"><div class="logo"><span class="flag">🎉</span><div><h1>Oturum Tamamlandı</h1><p>${msg}</p></div></div></header>
+    <div class="summary-row">
+      <div class="summary-card"><div class="num" style="color:var(--success)">${info.correct}</div><div class="lbl">DOĞRU</div></div>
+      <div class="summary-card"><div class="num" style="color:var(--error)">${info.wrong}</div><div class="lbl">YANLIŞ</div></div>
+      <div class="summary-card"><div class="num">${pct}%</div><div class="lbl">BAŞARI</div></div>
+    </div>
+    <div class="panel"><div class="bar-item"><div class="bar-lbl"><span>Bu oturum</span><span>${done} soru · ${mins} dk</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:linear-gradient(90deg,var(--accent),var(--gold))"></div></div></div>
+      <p class="bar-sub">Yanlış ve zor bulduğun sorular, bilimsel aralıklı tekrar (SM-2) ile tam zamanında karşına gelecek.</p></div>
+    <button class="primary-btn" onclick="startSession({mode:'mixed'})">🔁 Yeni Oturum</button>
+    <button class="ghost-btn" onclick="navigate('home')" style="padding:15px">🏠 Ana Sayfa</button>
+  </div>`;
+}
+
+/* ---- STATS ---- */
+function renderStats(){
+  const cs=catStats();const st=State.stats;
+  const weak=[];
+  for(const id in State.progress){const p=State.progress[id];if(p.attempts>=2){const r=p.correct/p.attempts;
+    if(r<0.6){const q=State.byId[id];if(q)weak.push({q,r})}}}
+  weak.sort((a,b)=>a.r-b.r);
+  const yc={};years().forEach(y=>yc[y]={a:0,c:0});
+  for(const id in State.progress){const q=State.byId[id];if(!q)continue;const p=State.progress[id];
+    if(yc[q.year]){yc[q.year].a+=p.attempts;yc[q.year].c+=p.correct}}
+  return `<div class="screen">
+    <div class="screen-head"><button class="back-btn" onclick="navigate('home')">← Geri</button><h2>📊 İstatistiklerim</h2></div>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="v">${st.totalAnswered}</div><div class="l">Toplam Soru</div></div>
+      <div class="stat-box"><div class="v">${accuracy()}%</div><div class="l">Başarı Oranı</div></div>
+      <div class="stat-box"><div class="v">${st.streakDays||0} 🔥</div><div class="l">Gün Serisi</div></div>
+      <div class="stat-box"><div class="v">${Math.round((st.studyMin||0)/60*10)/10}s</div><div class="l">Çalışma Süresi</div></div>
+    </div>
+    <div class="panel"><h3>Kategori Başarı Oranları</h3>
+      ${CATKEYS.map(c=>{const i=CATEGORIES[c],d=cs[c],pct=d.attempts?Math.round(d.correct/d.attempts*100):0;
+        return `<div class="bar-item"><div class="bar-lbl"><span>${i.icon} ${i.name}</span><span>${pct}%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${i.color}"></div></div>
+          <div class="bar-sub">${d.correct}/${d.attempts} doğru · ${d.total} soru havuzda</div></div>`}).join("")}
+    </div>
+    <div class="panel"><h3>⚠️ Zayıf Konularım</h3>
+      ${weak.length?weak.slice(0,6).map(w=>`<div class="weak-item"><span>${CATEGORIES[w.q.category].icon} ${esc(w.q.questionText.slice(0,46))}…</span><span class="pct">%${Math.round(w.r*100)}</span></div>`).join("")
+        :'<p class="bar-sub">Henüz yeterli veri yok. Biraz daha çöz, zayıf konularını burada göstereyim.</p>'}
+      ${weak.length?`<button class="primary-btn" style="margin-top:12px" onclick="startSession({mode:'weak'})">🎯 Zayıf Konuları Çalış</button>`:""}
+    </div>
+    <div class="panel"><h3>📅 Yıllara Göre Başarı</h3>
+      <div class="yeargrid">${years().map(y=>{const d=yc[y],p=d.a?Math.round(d.c/d.a*100):0;
+        return `<div class="ychip"><div class="yy">${y}</div><div class="yp" style="color:${p>=60?'var(--success)':p?'var(--error)':'var(--muted)'}">${d.a?p+"%":"–"}</div></div>`}).join("")}</div>
+    </div>
+    <button class="ghost-btn" style="padding:14px" onclick="exportData()">⬇️ İlerlememi Dışa Aktar (JSON)</button>
+  </div>`;
+}
+
+/* ---- SETTINGS ---- */
+function renderSettings(){
+  const s=State.settings;
+  return `<div class="screen">
+    <div class="screen-head"><button class="back-btn" onclick="navigate('home')">← Geri</button><h2>⚙️ Ayarlar</h2></div>
+    <div class="panel">
+      <div class="set-row"><div><div class="sl">Günlük hedef</div><div class="sd">Her gün çözmek istediğin soru</div></div>
+        <div class="stepper"><button onclick="bump('dailyGoal',-5)">−</button><span class="val">${s.dailyGoal}</span><button onclick="bump('dailyGoal',5)">+</button></div></div>
+      <div class="set-row"><div><div class="sl">Oturum uzunluğu</div><div class="sd">Bir oturumdaki soru sayısı</div></div>
+        <div class="stepper"><button onclick="bump('sessionLength',-5)">−</button><span class="val">${s.sessionLength}</span><button onclick="bump('sessionLength',5)">+</button></div></div>
+      <div class="set-row"><div><div class="sl">Ses efektleri</div><div class="sd">Doğru/yanlış sesleri</div></div>
+        <div class="toggle ${s.sound?"on":""}" onclick="toggleSet('sound')"><i></i></div></div>
+      <div class="set-row"><div><div class="sl">Karanlık mod</div><div class="sd">Göz dostu koyu tema</div></div>
+        <div class="toggle ${s.theme==='dark'?"on":""}" onclick="toggleTheme()"><i></i></div></div>
+    </div>
+    <div class="panel"><h3>Tercih edilen kategoriler</h3><p class="bar-sub" style="margin-bottom:10px">Boş bırakırsan tüm kategoriler karışık gelir.</p>
+      <div class="cat-grid">${CATKEYS.map(c=>{const on=s.cats.includes(c);const i=CATEGORIES[c];
+        return `<button class="cat-card" style="--c:${i.color};${on?'border-color:'+i.color+';background:'+i.color+'18':''}" onclick="toggleCat('${c}')">
+          <span class="cn">${on?"✅":i.icon} ${i.name}</span></button>`}).join("")}</div>
+    </div>
+    <button class="danger-btn" onclick="resetAll()">🗑️ Tüm İlerlemeyi Sıfırla</button>
+    <p class="fineprint">Verilerin yalnızca bu tarayıcıda (localStorage) saklanır. Sunucuya gönderilmez.</p>
+  </div>`;
+}
+function bump(k,d){State.settings[k]=Math.max(5,Math.min(60,State.settings[k]+d));saveSettings();render()}
+function toggleSet(k){State.settings[k]=!State.settings[k];saveSettings();render();if(k==="sound"&&State.settings.sound)Audio2.ok()}
+function toggleTheme(){State.settings.theme=State.settings.theme==="dark"?"light":"dark";
+  document.documentElement.setAttribute("data-theme",State.settings.theme);saveSettings();render()}
+function toggleCat(c){const a=State.settings.cats;const i=a.indexOf(c);if(i>=0)a.splice(i,1);else a.push(c);saveSettings();render()}
+function resetAll(){if(confirm("Tüm ilerleme, istatistik ve ayarlar silinecek. Emin misin?")){
+  localStorage.removeItem("kpss_progress");localStorage.removeItem("kpss_stats");localStorage.removeItem("kpss_settings");
+  load();toast("Sıfırlandı");navigate("home")}}
+function exportData(){
+  const data={exportedAt:new Date().toISOString(),stats:State.stats,progress:State.progress};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="kpss-ilerleme-"+new Date().toISOString().slice(0,10)+".json";a.click();toast("İndiriliyor…")}
+
+/* ---- TIMER (study) ---- */
+function startTimer(){State.qStart=Date.now();clearInterval(State.timerId);
+  State.timerId=setInterval(()=>{const el=document.getElementById("qtimer");
+    if(el)el.textContent="⏱️ "+Math.floor((Date.now()-State.qStart)/1000)+"sn"},1000)}
+
+/* ============ EXAM SIMULATION ============ */
+function startExam(){
+  const pool=shuffle(State.questions).slice(0,Math.min(60,State.questions.length));
+  if(pool.length<5){toast("Yeterli soru yok");return}
+  State.exam={qs:interleave(pool),answers:{},marked:{},idx:0,start:Date.now(),limit:60*60,done:false};
+  navigate("exam");
+}
+function renderExam(){
+  const e=State.exam;const q=e.qs[e.idx];const ci=CATEGORIES[q.category];
+  return `<div class="screen">
+    <div class="exam-bar">
+      <button class="back-btn" onclick="confirmQuitExam()">✕</button>
+      <span class="tm" id="examtimer">60:00</span>
+      <span class="pill">Cevaplanan: ${Object.keys(e.answers).length}/${e.qs.length}</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${(e.idx+1)/e.qs.length*100}%"></div></div>
+    <div class="study-meta"><span class="cat-badge" style="background:${ci.color}22;color:${ci.color}">${ci.icon} ${ci.name}</span>
+      <span class="pill">📅 ${q.year}</span><span class="pill">Soru ${e.idx+1}/${e.qs.length}</span></div>
+    <div class="q-card"><div class="q-text">${esc(q.questionText)}</div></div>
+    <div class="options">
+      ${LETTERS.filter(L=>q.options[L]).map(L=>{const on=e.answers[q.id]===L;
+        return `<button class="opt" style="${on?'border-color:var(--primary);background:var(--surface-2)':''}" onclick="examAnswer('${L}')">
+          <span class="lt" style="${on?'':'background:var(--muted)'}">${L}</span><span>${esc(q.options[L])}</span></button>`}).join("")}
+    </div>
+    <div class="exam-foot">
+      <button onclick="examNav(-1)">◀ Önceki</button>
+      <button onclick="toggleMark()" style="${e.marked[q.id]?'border-color:var(--gold);color:var(--gold)':''}">${e.marked[q.id]?"⭐ İşaretli":"☆ İşaretle"}</button>
+      <button class="next" onclick="examNav(1)">Sonraki ▶</button>
+    </div>
+    <div class="panel"><h3>Soru Haritası</h3>
+      <div class="exam-nav">${e.qs.map((qq,i)=>`<button class="qn ${e.answers[qq.id]?"answered":""} ${e.marked[qq.id]?"marked":""} ${i===e.idx?"current":""}" onclick="examGoto(${i})">${i+1}</button>`).join("")}</div>
+    </div>
+    <button class="primary-btn gold" onclick="finishExam()">✅ Sınavı Bitir</button>
+  </div>`;
+}
+function examAnswer(L){State.exam.answers[State.exam.qs[State.exam.idx].id]=L;render()}
+function examNav(d){const e=State.exam;e.idx=Math.max(0,Math.min(e.qs.length-1,e.idx+d));render()}
+function examGoto(i){State.exam.idx=i;render()}
+function toggleMark(){const e=State.exam,id=e.qs[e.idx].id;e.marked[id]=!e.marked[id];render()}
+function confirmQuitExam(){if(confirm("Sınavdan çıkılsın mı? İlerleme kaydedilmez."))navigate("home")}
+function startExamTimer(){clearInterval(State.timerId);
+  State.timerId=setInterval(()=>{const e=State.exam;if(!e)return;
+    const left=e.limit-Math.floor((Date.now()-e.start)/1000);
+    const el=document.getElementById("examtimer");
+    if(left<=0){finishExam();return}
+    if(el){const m=Math.floor(left/60),s=left%60;el.textContent=`${m}:${String(s).padStart(2,"0")}`;el.classList.toggle("warn",left<300)}},1000)}
+function finishExam(){
+  const e=State.exam;if(!e||e.done)return;e.done=true;clearInterval(State.timerId);
+  let correct=0;e.qs.forEach(q=>{const a=e.answers[q.id];if(a){const ok=a===q.correctAnswer;
+    record(q.id,ok,ok?4:1);if(ok)correct++}});
+  e.correct=correct;e.elapsed=Math.floor((Date.now()-e.start)/1000);
+  navigate("examResults");
+}
+function renderExamResults(){
+  const e=State.exam;const answered=Object.keys(e.answers).length;const wrong=answered-e.correct;
+  const empty=e.qs.length-answered;const net=Math.max(0,e.correct-wrong/4);
+  const pct=Math.round(e.correct/e.qs.length*100);const m=Math.floor(e.elapsed/60),s=e.elapsed%60;
+  return `<div class="screen">
+    <header class="app-header"><div class="logo"><span class="flag">🎯</span><div><h1>Sınav Sonucu</h1><p>${e.qs.length} soruluk Genel Kültür simülasyonu</p></div></div></header>
+    <div class="summary-row">
+      <div class="summary-card"><div class="num" style="color:var(--success)">${e.correct}</div><div class="lbl">DOĞRU</div></div>
+      <div class="summary-card"><div class="num" style="color:var(--error)">${wrong}</div><div class="lbl">YANLIŞ</div></div>
+      <div class="summary-card"><div class="num">${empty}</div><div class="lbl">BOŞ</div></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="v">${net.toFixed(2)}</div><div class="l">Net (D − Y/4)</div></div>
+      <div class="stat-box"><div class="v">${m}:${String(s).padStart(2,"0")}</div><div class="l">Süre</div></div>
+    </div>
+    <div class="panel"><div class="bar-item"><div class="bar-lbl"><span>Başarı</span><span>${pct}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:linear-gradient(90deg,var(--accent),var(--gold))"></div></div></div></div>
+    <div class="panel"><h3>Yanlışlarını Gözden Geçir</h3>
+      ${e.qs.filter(q=>e.answers[q.id]&&e.answers[q.id]!==q.correctAnswer).slice(0,40).map(q=>
+        `<div class="weak-item"><span>${CATEGORIES[q.category].icon} ${esc(q.questionText.slice(0,42))}…</span><span><b style="color:var(--error)">${e.answers[q.id]}</b> → <b style="color:var(--success)">${q.correctAnswer}</b></span></div>`).join("")||'<p class="bar-sub">Yanlışın yok 👏</p>'}
+    </div>
+    <button class="primary-btn" onclick="startExam()">🔁 Yeni Sınav</button>
+    <button class="ghost-btn" style="padding:15px" onclick="navigate('home')">🏠 Ana Sayfa</button>
+  </div>`;
+}
+
+/* ============ PWA: INSTALL & SERVICE WORKER ============ */
+let deferredPrompt=null;
+const isStandalone=window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;if(State.view==="home")render()});
+window.addEventListener("appinstalled",()=>{deferredPrompt=null;toast("Uygulama kuruldu 🎉");if(State.view==="home")render()});
+function installBanner(){
+  if(isStandalone||sessionStorage.getItem("kpss_hideInstall"))return"";
+  if(deferredPrompt)
+    return `<div class="install-banner"><span style="font-size:24px">📲</span>
+      <div class="ib-txt">Telefonuna uygulama olarak ekle<small>Çevrimdışı çalışır, tam ekran açılır</small></div>
+      <button onclick="installApp()">Ekle</button><button class="ib-x" onclick="hideInstall()">✕</button></div>`;
+  if(isIOS)
+    return `<div class="install-banner"><span style="font-size:24px">📲</span>
+      <div class="ib-txt">Ana ekrana ekle<small>Paylaş ⎙ → “Ana Ekrana Ekle” ile uygulama gibi kullan</small></div>
+      <button class="ib-x" onclick="hideInstall()">✕</button></div>`;
+  return"";
+}
+function installApp(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt.userChoice.finally(()=>{deferredPrompt=null;render()})}
+function hideInstall(){sessionStorage.setItem("kpss_hideInstall","1");render()}
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+
+/* ============ BOOT ============ */
+function boot(){
+  const data=window.KPSS_DATA;
+  if(!data||!data.questions){document.getElementById("app").innerHTML=
+    '<div class="screen"><div class="empty"><div class="be">😕</div><b>Soru verisi yüklenemedi.</b><br>questions.js dosyasının index.html ile aynı klasörde olduğundan emin ol.</div></div>';return}
+  State.questions=data.questions;
+  State.questions.forEach(q=>State.byId[q.id]=q);
+  load();
+  navigate("home");
+}
+boot();
+</script>
+</body>
+</html>
