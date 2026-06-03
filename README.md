@@ -2,6 +2,8 @@
 
 2001–2017 yılları arasındaki gerçek KPSS Genel Kültür sorularını, **bilimsel olarak kanıtlanmış öğrenme yöntemleriyle** çalıştıran, kurulum gerektirmeyen tek dosyalık bir web uygulaması.
 
+> 📱 **Canlı:** <https://haktantay1.github.io/kpss-genel-kultur/> — telefonda aç, “Ana Ekrana Ekle” de, uygulama gibi çevrimdışı kullan (PWA).
+
 - **801 gerçek çıkmış soru** — hepsi resmî ÖSYM cevap anahtarlarıyla doğrulanmış
 - **Aralıklı tekrar (SM-2 algoritması)** — her soruyu tam unutmak üzereyken karşına çıkarır
 - **Aktif hatırlama, serpiştirme (interleaving), zayıf konu takibi**
@@ -74,3 +76,18 @@ python -c "import io; d=io.open('questions.json',encoding='utf-8').read(); io.op
 | `questions.js` / `questions.json` | Çıkarılmış soru verisi |
 
 > Not: `build_dataset.py` içindeki `PDF` yolu, kaynak PDF'i işaret eder. Farklı bir konumda ise güncelle.
+
+## 📱 Telefona kurma (PWA)
+
+- **iPhone (Safari):** Linki aç → Paylaş ⎙ → **“Ana Ekrana Ekle”**.
+- **Android (Chrome):** Linki aç → çıkan **“Ekle”** çubuğuna dokun (veya menü ⋮ → “Uygulamayı yükle”).
+- İlk açılıştan sonra **internet olmadan da** çalışır (service worker önbelleğe alır).
+
+## 🔄 Güncelleme
+
+Kodu/soruları değiştirdikten sonra:
+```powershell
+git add -A; git commit -m "guncelleme"; git push
+```
+GitHub Pages 1–2 dakikada yeniden yayınlar. Kullanıcıların yeni sürümü alması için `sw.js` içindeki `CACHE = "kpss-gk-v1"` sürümünü artır (örn. `-v2`).
+
